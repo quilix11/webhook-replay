@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Request, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.session import get_async_session
-from src.services.webhook import save_webhook, get_all_webhooks
+from src.services.webhook import save_webhook, get_all_webhooks, replay_webhooks
+from models import WebHook
+from sqlalchemy import select
+import httpx
 
 router = APIRouter()
 
@@ -26,3 +29,13 @@ async def receive(payload: dict = Depends(intercept_data), session: AsyncSession
 async def list_webhooks(session: AsyncSession = Depends(get_async_session)):
     webhooks = await get_all_webhooks(session)
     return {"status": "success", "count": len(webhooks), "data": webhooks}
+
+@router.get("/webhooks/{id}")
+async def get_hook(id: int, session: AsyncSession = Depends(get_async_session)):
+    db_hook = await session.execute(select(WebHook).where(WebHook.id == id))
+    hook = db_hook.scalar_one_or_none()
+    if hook is None:
+        raise HTTPException(status_code=404, detail="WebHook not found")
+    return hook
+
+    

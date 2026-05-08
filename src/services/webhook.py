@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.models.webhook import WebHook
+import httpx
 
 async def save_webhook(session: AsyncSession, headers: dict, payload: dict):
     webhook = WebHook(headers= headers, payload= payload)
@@ -15,3 +16,10 @@ async def get_all_webhooks(session: AsyncSession):
     result = await session.execute(query)
     
     return result.scalars().all()
+
+async def replay_webhooks(session: AsyncSession, webhook_id, target_url):
+    replay = await session.execute(select(WebHook).where(WebHook.id == webhook_id))
+    webhook = replay.scalar_one_or_none()
+    async with httpx.AsyncClient() as client:
+        await client.post(target_url, json=webhook.payload, headers=webhook.headers)
+        
