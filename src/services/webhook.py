@@ -18,8 +18,10 @@ async def get_all_webhooks(session: AsyncSession):
     return result.scalars().all()
 
 async def replay_webhooks(session: AsyncSession, webhook_id, target_url):
-    replay = await session.execute(select(WebHook).where(WebHook.id == webhook_id))
-    webhook = replay.scalar_one_or_none()
+    result = await session.execute(select(WebHook).where(WebHook.id == webhook_id))
+    webhook = result.scalar_one_or_none()
     async with httpx.AsyncClient() as client:
-        await client.post(target_url, json=webhook.payload, headers=webhook.headers)
+        result = await client.post(target_url, json=webhook.payload, headers=webhook.headers)
+    return result
+
         

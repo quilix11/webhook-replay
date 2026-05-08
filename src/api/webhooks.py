@@ -38,4 +38,7 @@ async def get_hook(id: int, session: AsyncSession = Depends(get_async_session)):
         raise HTTPException(status_code=404, detail="WebHook not found")
     return hook
 
-    
+@router.post("/webhooks/{id}/replay")
+async def replay_hook(id:int, target:str, session: AsyncSession = Depends(get_async_session)):
+    replay = await replay_webhooks(session= session, webhook_id= id, target_url= target)
+    return replay
