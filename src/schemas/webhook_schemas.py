@@ -8,5 +8,3 @@ class UserCreate(BaseModel):
 class WebhookCreate(BaseModel):
     headers: dict[str, Any]
     payload: dict[str, Any]
-
-    

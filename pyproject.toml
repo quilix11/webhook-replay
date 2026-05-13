@@ -15,12 +15,19 @@ dependencies = [
     "asyncpg (>=0.31.0,<0.32.0)",
     "pydantic-settings (>=2.14.0,<3.0.0)",
     "pydantic (>=2.13.3,<3.0.0)",
-    "httpx (>=0.28.1,<0.29.0)"
+    "httpx (>=0.28.1,<0.29.0)",
+    "pytest (>=9.0.3,<10.0.0)",
+    "pytest-asyncio (>=1.3.0,<2.0.0)"
 ]
 
 [tool.poetry]
-packages = [{include = "webhook_replay", from = "src"}]
+packages = [{include = "src"}]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+extraPaths = ["."]
+venvPath = "C:\\Users\\nazar.luchkiv\\AppData\\Local\\pypoetry\\Cache\\virtualenvs"
+venv = "webhook-replay-5fwdPAJp-py3.13"

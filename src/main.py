@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api.webhooks import router as webhooks_router
+from src.api.webhook_routes import router as webhooks_router
 
 app = FastAPI(
     title="Webhook Replay Server",
